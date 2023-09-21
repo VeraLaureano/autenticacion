@@ -1,10 +1,9 @@
 const express = require('express');
-const { postUserLogin, postUserSignup } = require('../controllers/user.controller');
+const { postUserLogin, postUserSignup, patchUser } = require('../controllers/user.controller');
+const authentication = require('../middlewares/auth');
 const router = express.Router();
 
-router.route('/').get((req, res) => {
-  return res.end('dashboard');
-});
+router.route('/').patch(authentication, patchUser);
 router.route('/signup').post(postUserSignup);
 router.route('/login').post(postUserLogin);
 

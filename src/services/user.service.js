@@ -15,8 +15,14 @@ const findUserAuth = async (userId) => {
   return responseUser;
 };
 
+const findAndUpdateUser = async (userId, data) => {
+  const responseUser = await UserModel.findOneAndUpdate({_id: userId}, data, { new: true, runValidators: true });
+  return responseUser;
+};
+
 module.exports = {
   createUser,
   findOneUser,
-  findUserAuth
+  findUserAuth,
+  findAndUpdateUser
 };
