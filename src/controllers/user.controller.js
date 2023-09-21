@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const validator = require('validator');
 const escapeSpecialCharacters = require('../utils/escapeSpecialCharacters');
 const validatePassword = require('../utils/validatePassword');
 const { createUser, findOneUser } = require('../services/user.service');
@@ -9,18 +10,26 @@ const postUserSignup = async (req, res) => {
   try {
     const { username, email, password, confirmPassword } = req.body;
 
+    const isExistingUser = await findOneUser(email);
+
+    if (isExistingUser)
+      return res.status(409).json({ message: 'ALREADY_A_USER_WITH_THAT_EMAIL'});
+
+    if (!email || !validator.isEmail(email))
+      return res.status(400).json({message: 'INVALID_EMAIL'});
+      
+    const escapedPassword = escapeSpecialCharacters(password);
+    const isPasswordValid = validatePassword(escapedPassword);
+
+    if (!password || password.length < 8 || !isPasswordValid)
+      return res.status(400).json({message: 'INVALID_PASSWORD'});
+
     if (password !== confirmPassword)
       return res.status(400).json({message: 'PASSWORD_NOT_MATCH'});  
   
     const escapedUsername = escapeSpecialCharacters(username);
     const escapedEmail = escapeSpecialCharacters(email);
-    const escapedPassword = escapeSpecialCharacters(password);
-    const isPasswordValid = validatePassword(escapedPassword);
-    
-    if (!isPasswordValid)
-      return res.status(400).json({message: 'PASSWORD_DOES_NOT_PASS_THE_VALIDATION'});
-  
-    const passwordHashed = encryptPassword(escapedPassword);
+    const passwordHashed = await encryptPassword(escapedPassword);
   
     const userData = {
       username: escapedUsername,
@@ -41,6 +50,7 @@ const postUserLogin = async (req, res) => {
     const { email, password } = req.body;
 
     const user = await findOneUser(email);
+    
     if (!user)
       return res.status(401).json({message: 'INVALID_CREDENTIALS'});
 

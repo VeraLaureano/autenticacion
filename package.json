@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node ./src/app.js",
-    "start:dev": "nodemon ./src/app.js",
+    "start:dev": "cross-env NODE_ENV=development nodemon ./src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint --fix ./"
   },
@@ -22,7 +22,7 @@
   "homepage": "https://github.com/VeraLaureano/autenticacion#readme",
   "dependencies": {
     "bcrypt": "^5.1.1",
-    "body-parser": "^1.20.1",
+    "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "jsonwebtoken": "^9.0.2",
@@ -30,6 +30,7 @@
     "validator": "^13.11.0"
   },
   "devDependencies": {
+    "cross-env": "^7.0.3",
     "eslint": "^8.49.0",
     "nodemon": "^3.0.1"
   }

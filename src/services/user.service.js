@@ -6,11 +6,17 @@ const createUser = async (data) => {
 };
 
 const findOneUser = async (email) => {
-  const responseUser = await UserModel.findOne({email});
+  const responseUser = await UserModel.findOne({ email });
+  return responseUser;
+};
+
+const findUserAuth = async (userId) => {
+  const responseUser = await UserModel.findById({ _id: userId });
   return responseUser;
 };
 
 module.exports = {
   createUser,
-  findOneUser
+  findOneUser,
+  findUserAuth
 };
