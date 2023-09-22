@@ -76,7 +76,7 @@ const patchUser = async (req, res) => {
 
     if (username) {
       const escapedUsername = escapeSpecialCharacters(username);
-      newData = {...newData, escapedUsername};
+      newData = { ...newData, username: escapedUsername };
     }
 
     if (password) {
@@ -89,17 +89,17 @@ const patchUser = async (req, res) => {
       if (password.length < 8 || !isPasswordValid) 
         return res.status(BAD_REQUEST).json({message: 'INVALID_PASSWORD'});
 
-      newData = {...newData, password};
+      newData = {...newData, password: escapedPassword};
     }
 
     const newUser = await findAndUpdateUser(req.user._id, {...newData});
-
+    
     if (!newUser) 
       return res.status(INTERNAL_SERVER_ERROR).json({ message: 'USER_NOT_FOUND' });
-
+  
     req.user = newUser;
-
-    return res.status(CREATED).json({ update: true });
+      
+    return res.status(CREATED).json({ update: true, newUser });
   } catch (error) {
     logError(error);
   }

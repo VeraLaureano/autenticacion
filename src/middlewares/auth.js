@@ -1,8 +1,7 @@
-const jwt = require('jsonwebtoken');
-const { SECRET_KEY } = require('../config/env');
 const { logError } = require('../utils/logs');
 const { findUserAuth } = require('../services/user.service');
 const { UNAUTHORIZED } = require('../config/statusCodes');
+const decoded = require('../utils/decoded');
 
 const authentication = async (req, res, next) => {
   const auth = req.headers.authorization;
@@ -13,8 +12,7 @@ const authentication = async (req, res, next) => {
   const token = auth.split(' ')[1];
 
   try {
-    const decoded = jwt.verify(token, SECRET_KEY);
-    const userId = decoded.userId;
+    const { userId } = decoded(token);
     const user = await findUserAuth(userId);
 
     if (!user)
