@@ -13,7 +13,7 @@ const errorHandler = require('./middlewares/errorHandler');
 // Create a rate limiter with specified options
 const limiterOptions = {
   path: '*',
-  method: 'all',
+  method: ['post', 'patch', 'delete'],
   lookup: ['connection.remoteAddress'],
   total: 100,
   expire: 1000 * 60 * 15,
