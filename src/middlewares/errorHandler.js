@@ -1,13 +1,10 @@
 // Import the 'TOO_MANY_REQUEST' and 'INTERNAL_SERVER_ERROR' constants from the '../config/statusCodes' module
 const { TOO_MANY_REQUEST, INTERNAL_SERVER_ERROR } = require('../config/statusCodes');
 
-// Import the 'RateLimitError' class from the 'express-rate-limit' module
-const { RateLimitError } = require('express-rate-limit');
-
 // Define an error handler middleware function named 'errorHandler'
-const errorHandler = (err, req, res, next) => {
-  // If the error is an instance of 'RateLimitError', return a response with status code 'TOO_MANY_REQUEST'
-  if (err instanceof RateLimitError) {
+const errorHandler = (err, _req, res, next) => {
+  // If the error message contains 'Rate limit', return a response with status code 'TOO_MANY_REQUEST'
+  if (err && err.message.includes('Rate limit')) {
     return res.status(TOO_MANY_REQUEST).json({ message: 'TOO_MANY_REQUEST_TRY_AGAIN_LATER' });
   }
   
@@ -20,6 +17,7 @@ const errorHandler = (err, req, res, next) => {
     next();
   }
 };
+
 
 // Export the 'errorHandler' middleware function
 module.exports = errorHandler;
