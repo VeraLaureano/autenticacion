@@ -20,9 +20,15 @@ const findAndUpdateUser = async (userId, data) => {
   return responseUser;
 };
 
+const findAndDeleteUser = async (userId) => {
+  const responseUser = await UserModel.findOneAndDelete({_id: userId});
+  return responseUser;
+};
+
 module.exports = {
   createUser,
   findOneUser,
   findUserAuth,
-  findAndUpdateUser
+  findAndUpdateUser,
+  findAndDeleteUser
 };
