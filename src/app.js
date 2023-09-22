@@ -7,16 +7,17 @@ const dashboardRouter = require('./routes/dashboard.route');
 const cors = require('cors');
 const authentication = require('./middlewares/auth');
 const notFound = require('./middlewares/notFound');
-const { rateLimit } = require('express-rate-limit');
+const limiter = require('express-limiter');
 const errorHandler = require('./middlewares/errorHandler');
 
 // Create a rate limiter with specified options
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 100,
-  standardHeaders: 'draft-7',
-  legacyHeaders: false
-});
+const limiterOptions = {
+  path: '*',
+  method: 'all',
+  lookup: ['connection.remoteAddress'],
+  total: 100,
+  expire: 1000 * 60 * 15,
+};
 
 // Use JSON body parser middleware
 app.use(express.json());
@@ -25,7 +26,7 @@ app.use(express.urlencoded({extended: true}));
 // Use CORS middleware to enable cross-origin resource sharing
 app.use(cors());
 // Use rate limiter middleware to limit request rate
-app.use(limiter);
+app.use(limiter(limiterOptions));
 // Define a route handler for the root path ('/')
 app.get('/', (req, res) => {
   res.send('<h1>Auth service</h1>');
