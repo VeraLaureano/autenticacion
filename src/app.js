@@ -15,10 +15,7 @@ app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 // Use CORS middleware to enable cross-origin resource sharing
 app.use(cors());
-// Define a route handler for the root path ('/')
-app.get('/', (req, res) => {
-  res.send('<h1>Auth service</h1>');
-});
+app.use(express.static('public'));
 
 // Use the 'userRouter' for routes starting with '/user'
 app.use(routes.user, userRouter);
