@@ -135,7 +135,7 @@ const patchUser = async (req, res) =>  {
     req.user = newUser;
       
     // Return a created response with an update flag and the new user data
-    return res.status(CREATED).json({ update: true, newUser });
+    return res.status(CREATED).json({ update: true });
   } catch (error) {
     // Log any errors that occur during execution
     logError(error);
